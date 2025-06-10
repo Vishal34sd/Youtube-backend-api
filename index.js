@@ -9,6 +9,7 @@ connectToDB()
 
 
 const app = express();
+app.use("/api/v1/user",userRoutes);
 
 app.listen(PORT , ()=>{
     console.log(`Server is running on ${PORT}`);
