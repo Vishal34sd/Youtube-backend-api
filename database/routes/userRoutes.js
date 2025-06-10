@@ -3,7 +3,7 @@ const express = require("express");
 
 const router = express.Router();
 
-router.post("/signup", userSignup);
+router.post("/signup", userSignUp);
 
 
 
