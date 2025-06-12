@@ -5,6 +5,7 @@ import fileUpload from "express-fileupload";
 import bodyParser from "body-parser";
 
 import userRoutes from "./routes/userRoutes.js";
+import videoRoutes from "./routes/videoRoutes.js";
 const PORT = process.env.PORT || 8000 ;
 dotenv.config();
 connectToDB()
@@ -23,6 +24,7 @@ app.use(fileUpload({
 
 
 app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/video",videoRoutes);
 
 
 app.listen(PORT , ()=>{
