@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import cloudinary from "../config/cloudinary.js";
 import User from "../model/user.js"
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 router.post("/signup", async (req, res) => {
     try {
@@ -25,6 +26,45 @@ router.post("/signup", async (req, res) => {
         res.status(201).json({
             user
         });
+    } catch (e) {
+        console.error("Something went wrong due to ", e);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+router.post("/login", async (req, res) => {
+    try {
+       const existingUser = await User.findOne({email: req.body.email});
+       if(!existingUser){
+        res.status(404).json({
+            message : "User not found"
+        });
+       }
+       const isValid = await bcrypt.compare(
+        req.body.password, existingUser.password
+       );
+       if(!isValid){
+        res.satus(500).json({
+            message : "Invalid Credientials"
+        })
+       }
+       const token = jwt.sign({
+        _id : existingUser._id,
+        channelName : existingUser.channelName,
+        email : existingUser.email,
+        phone : existingUser.phone,
+        logoId : existingUser.logoId
+       }, process.env.JWT_TOKEN , {expiresIn : "1h"})
+       res.status(200).json({
+         _id : existingUser._id,
+        channelName : existingUser.channelName,
+        email : existingUser.email,
+        phone : existingUser.phone,
+        logoId : existingUser.logoId,
+        token : token,
+        subscribers : existingUser.subscribers,
+        subscribedChannel : existingUser.subscribedChannels
+       })
     } catch (e) {
         console.error("Something went wrong due to ", e);
         res.status(500).json({ error: "Internal server error" });
