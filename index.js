@@ -16,12 +16,14 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
 
-app.use("/api/v1/user",userRoutes);
-
 app.use(fileUpload({
     useTempFiles : true ,
     tempFileDir : "./tmp/"
 }))
+
+
+app.use("/api/v1/user",userRoutes);
+
 
 app.listen(PORT , ()=>{
     console.log(`Server is running on ${PORT}`);

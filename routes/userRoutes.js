@@ -1,12 +1,15 @@
 import express from "express" ;
 const router = express.Router();
 import bcrypt from "bcrypt";
+import cloudinary from "../config/cloudinary.js";
+import User from "../model/user.js"
+import mongoose from "mongoose";
 
 router.post("/signup", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const uploadImage = await cloudinary.uploader.upload(
-            req.files.logo.tempFilePath
+            req.files.logoUrl.tempFilePath
         );
         const newUser = new User({
             _id: new mongoose.Types.ObjectId(),
